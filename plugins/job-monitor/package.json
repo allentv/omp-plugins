@@ -1,0 +1,10 @@
+{
+  "name": "omp-job-monitor",
+  "version": "0.1.0",
+  "description": "Real-time background job monitoring for OMP harness",
+  "omp": {
+    "extensions": ["./index.ts"]
+  },
+  "keywords": ["omp", "oh-my-pi", "extension", "jobs", "monitoring"],
+  "license": "MIT"
+}

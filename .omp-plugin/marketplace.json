@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "allentv-omp-plugins",
+  "owner": {
+    "name": "allentv"
+  },
+  "metadata": {
+    "description": "OMP extensions by allentv",
+    "version": "0.1.0",
+    "pluginRoot": "plugins"
+  },
+  "plugins": [
+    {
+      "name": "job-monitor",
+      "description": "Real-time background job monitoring with live progress updates",
+      "source": "./job-monitor",
+      "category": "productivity",
+      "keywords": ["jobs", "background", "monitoring", "progress"]
+    }
+  ]
+}
