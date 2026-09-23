@@ -9,11 +9,17 @@ import type {
  * Polls background job status and displays live progress in the TUI.
  * Uses ctx.getAsyncJobSnapshot() + ctx.setInterval() for periodic updates.
  * Timers auto-clear on session_shutdown per OMP contract.
+ *
+ * State is per-session — multiple OMP instances stay isolated.
  */
 export default function jobMonitor(pi: ExtensionAPI) {
   const z = pi.zod;
 
   pi.setLabel("Job Monitor");
+
+  // --- Per-session state (isolated across OMP instances) ---
+  const sessionPollActive = new Set<string>();
+  const sessionSeenJobs = new Map<string, Set<string>>();
 
   // --- Tool: get current job status on demand ---
   pi.registerTool({
@@ -67,11 +73,10 @@ export default function jobMonitor(pi: ExtensionAPI) {
   });
 
   // --- Lazy polling: only activates when jobs are running ---
-  let statusPollActive = false;
-
   function startStatusPolling(ctx: ExtensionContext) {
-    if (statusPollActive) return;
-    statusPollActive = true;
+    const sid = ctx.sessionManager.getSessionId() ?? "unknown";
+    if (sessionPollActive.has(sid)) return;
+    sessionPollActive.add(sid);
 
     ctx.setInterval(() => {
       const snapshot = ctx.getAsyncJobSnapshot();
@@ -79,7 +84,7 @@ export default function jobMonitor(pi: ExtensionAPI) {
 
       if (!hasJobs) {
         ctx.ui.setStatus?.("");
-        statusPollActive = false;
+        sessionPollActive.delete(sid);
         return;
       }
 
@@ -104,7 +109,11 @@ export default function jobMonitor(pi: ExtensionAPI) {
   }
 
   function startCompletionWatcher(ctx: ExtensionContext) {
-    const seen = new Set<string>();
+    const sid = ctx.sessionManager.getSessionId() ?? "unknown";
+    if (!sessionSeenJobs.has(sid)) {
+      sessionSeenJobs.set(sid, new Set());
+    }
+    const seen = sessionSeenJobs.get(sid)!;
 
     ctx.setInterval(() => {
       const snapshot = ctx.getAsyncJobSnapshot();
@@ -137,5 +146,12 @@ export default function jobMonitor(pi: ExtensionAPI) {
   pi.on("before_subagent_spawn", async (_event, ctx) => {
     startStatusPolling(ctx);
     startCompletionWatcher(ctx);
+  });
+
+  // --- Cleanup on session shutdown ---
+  pi.on("session_shutdown", async (_event, ctx) => {
+    const sid = ctx.sessionManager.getSessionId() ?? "unknown";
+    sessionPollActive.delete(sid);
+    sessionSeenJobs.delete(sid);
   });
 }
