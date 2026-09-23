@@ -9,6 +9,7 @@ Add the marketplace and install plugins individually:
 ```bash
 omp plugin marketplace add allentv/omp-plugins
 omp plugin install job-monitor@allentv-omp-plugins
+omp plugin install skill-discovery@allentv-omp-plugins
 ```
 
 ## Plugins
@@ -16,6 +17,7 @@ omp plugin install job-monitor@allentv-omp-plugins
 | Plugin | Description |
 |---|---|
 | [job-monitor](plugins/job-monitor/) | Real-time background job monitoring with live progress updates |
+| [skill-discovery](plugins/skill-discovery/) | Lazy-load skills on demand with a compact index and search tool |
 
 ## Adding a plugin
 
