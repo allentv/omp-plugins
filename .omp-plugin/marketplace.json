@@ -16,6 +16,13 @@
       "source": "./job-monitor",
       "category": "productivity",
       "keywords": ["jobs", "background", "monitoring", "progress"]
+    },
+    {
+      "name": "skill-discovery",
+      "description": "Lazy-load skills on demand with a compact index and search tool",
+      "source": "./skill-discovery",
+      "category": "productivity",
+      "keywords": ["skills", "lazy-loading", "discovery", "search"]
     }
   ]
 }
