@@ -1,6 +1,7 @@
 {
   "name": "omp-skill-discovery",
   "version": "0.1.0",
+  "author": "allentv",
   "description": "Lazy-load skills on demand with a compact index and search tool",
   "omp": {
     "extensions": ["./index.ts"]

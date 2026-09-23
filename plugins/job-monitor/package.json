@@ -1,6 +1,7 @@
 {
   "name": "omp-job-monitor",
   "version": "0.1.0",
+  "author": "allentv",
   "description": "Real-time background job monitoring for OMP harness",
   "omp": {
     "extensions": ["./index.ts"]

@@ -1,6 +1,7 @@
 {
   "name": "omp-plugins",
   "version": "0.1.0",
+  "author": "allentv",
   "description": "Community OMP extensions",
   "private": true,
   "license": "MIT"
