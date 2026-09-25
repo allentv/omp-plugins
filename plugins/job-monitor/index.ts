@@ -35,7 +35,7 @@ export default function jobMonitor(pi: ExtensionAPI) {
     }),
     async execute(_id, params, _signal, _onUpdate, ctx) {
       const snapshot = ctx.getAsyncJobSnapshot();
-      if (!snapshot || snapshot.jobs.length === 0) {
+      if (!snapshot || !snapshot.jobs || snapshot.jobs.length === 0) {
         return {
           content: [{ type: "text", text: "No background jobs running." }],
         };
@@ -80,7 +80,7 @@ export default function jobMonitor(pi: ExtensionAPI) {
 
     ctx.setInterval(() => {
       const snapshot = ctx.getAsyncJobSnapshot();
-      const hasJobs = snapshot && snapshot.jobs.length > 0;
+      const hasJobs = snapshot && snapshot.jobs && snapshot.jobs.length > 0;
 
       if (!hasJobs) {
         ctx.ui.setStatus?.("");
@@ -117,7 +117,7 @@ export default function jobMonitor(pi: ExtensionAPI) {
 
     ctx.setInterval(() => {
       const snapshot = ctx.getAsyncJobSnapshot();
-      if (!snapshot) return;
+      if (!snapshot || !snapshot.jobs) return;
 
       for (const job of snapshot.jobs) {
         if (job.status !== "running" && !seen.has(job.id)) {
